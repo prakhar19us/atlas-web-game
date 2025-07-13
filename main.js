@@ -252,18 +252,25 @@ async function animateAircraftFlight(fromCoords, toCoords) {
   });
 }
 
-function speak(text) {
-  console.log("Speaking:", text); // add this
+function speak(text, onEnd = null) {
+  console.log("Speaking:", text);
   const plainText = text.replace(/<[^>]*>/g, "");
   const utter = new SpeechSynthesisUtterance(plainText);
- const voices = window.speechSynthesis.getVoices();
-  utter.voice = voices.find(v => v.name === "Google UK English Female");
- //utter.voice = voices.find(v => v.name === "Microsoft Heera - English (India)");
 
-  utter.pitch = 1.2; // Slightly higher pitch for a softer tone
-  utter.rate = 0.90; // Slightly slower pace for clarity
+  const voices = window.speechSynthesis.getVoices();
+  utter.voice = voices.find(v => v.name === "Google UK English Female");
+
+  utter.pitch = 1.2;
+  utter.rate = 0.90;
+
+  // 👉 Call onEnd after speaking finishes
+  if (onEnd) {
+    utter.onend = onEnd;
+  }
+
   speechSynthesis.speak(utter);
 }
+
 
 
 
@@ -341,7 +348,10 @@ if (used.includes(transcript)) {
         await new Promise((resolve) => setTimeout(resolve, 1500)); // 1.5 second delay
           const yourTurnText = `Your turn! Say a place starting with ${lastLetter.toUpperCase()}`;
     statusDiv.textContent = `🎤 ${yourTurnText}`;
-    speak(yourTurnText);
+    speak(yourTurnText,() => {
+      // Auto-click the Speak button to start listening
+      speakBtn.click();
+    });
 
       //statusDiv.textContent = `🎤 Your turn! Say a place starting with ${lastLetter.toUpperCase()}`;
     }, 2500);
