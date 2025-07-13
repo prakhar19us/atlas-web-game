@@ -46,8 +46,8 @@ const places = [
   "dhaka", "bridgetown", "minsk", "brussels", "belmopan", "porto-novo",
   "thimphu", "sucre", "sarajevo", "gaborone", "brasília",
   "bandar seri begawan", "sofia", "ouagadougou", "gitega", "praia",
-  "phnom penh", "yaoundé", "ottawa", "bangui", "n'djamena", "santiago",
-  "beijing", "bogotá", "moroni", "brazzaville", "san josé", "zagreb", "havana",
+  "phnom penh", "yaounde", "ottawa", "bangui", "n'djamena", "santiago",
+  "beijing", "bogotá", "moroni", "brazzaville", "san jose", "zagreb", "havana",
   "nicosia", "prague", "kinshasa", "copenhagen", "djibouti", "roseau",
   "santo domingo", "quito", "cairo", "san salvador", "malabo", "asmara",
   "tallinn", "mbabane", "addis ababa", "suva", "helsinki", "paris", "libreville",
@@ -57,7 +57,7 @@ const places = [
   "baghdad", "dublin", "jerusalem", "rome", "kingston", "tokyo", "amman",
   "nur-sultan", "nairobi", "south tarawa", "kuwait city", "bishkek",
   "vientiane", "riga", "beirut", "maseru", "monrovia", "tripoli", "vaduz",
-  "vilnius", "luxembourg", "antananarivo", "lilongwe", "kuala lumpur", "malé",
+  "vilnius", "luxembourg", "antananarivo", "lilongwe", "kuala lumpur", "male",
   "bamako", "valletta", "majuro", "nouakchott", "port louis", "mexico city",
   "palikir", "chișinău", "monaco", "ulaanbaatar", "podgorica", "rabat",
   "maputo", "naypyidaw", "windhoek", "yaren", "kathmandu", "amsterdam",
@@ -65,11 +65,11 @@ const places = [
   "muscat", "islamabad", "ngerulmud", "ramallah", "panama city", "port moresby",
   "asunción", "lima", "manila", "warsaw", "lisbon", "doha", "bucharest",
   "moscow", "kigali", "basseterre", "castries", "kingstown", "apia", "san marino",
-  "são tomé", "riyadh", "dakar", "belgrade", "victoria", "freetown", "singapore",
+  "são tome", "riyadh", "dakar", "belgrade", "victoria", "freetown", "singapore",
   "bratislava", "ljubljana", "honiara", "mogadishu", "cape town", "seoul",
   "juba", "madrid", "sri jayawardenepura kotte", "khartoum", "paramaribo",
   "stockholm", "bern", "damascus", "taipei", "dushanbe", "dodoma", "bangkok",
-  "dili", "lomé", "nuku'alofa", "port of spain", "tunis", "ankara", "ashgabat",
+  "dili", "lome", "nuku'alofa", "port of spain", "tunis", "ankara", "ashgabat",
   "funafuti", "kampala", "kyiv", "abu dhabi", "london", "washington d.c.",
   "montevideo", "tashkent", "port vila", "vatican city", "caracas", "hanoi",
   "sana'a", "lusaka", "harare",
@@ -327,7 +327,7 @@ if (used.includes(transcript)) {
     const aiLastLetter = aiPlace.slice(-1);
 
     statusDiv.textContent = `🤔 Thinking...`;
-    speak(`Hmm... let me think of a place starting with ${userLastChar.toUpperCase()}`);
+    speak(`Okay... let me think of a place starting with ${userLastChar.toUpperCase()}`);
 
     setTimeout(async () => {
       const aiCountryCode = await showOnMap(aiPlace);
@@ -338,7 +338,12 @@ if (used.includes(transcript)) {
       document.getElementById("score").textContent = score;
 
       lastLetter = aiLastLetter;
-      statusDiv.textContent = `🎤 Your turn! Say a place starting with ${lastLetter.toUpperCase()}`;
+        await new Promise((resolve) => setTimeout(resolve, 1500)); // 1.5 second delay
+          const yourTurnText = `Your turn! Say a place starting with ${lastLetter.toUpperCase()}`;
+    statusDiv.textContent = `🎤 ${yourTurnText}`;
+    speak(yourTurnText);
+
+      //statusDiv.textContent = `🎤 Your turn! Say a place starting with ${lastLetter.toUpperCase()}`;
     }, 2500);
   });
 };
