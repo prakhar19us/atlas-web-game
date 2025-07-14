@@ -300,6 +300,19 @@ recognition.onresult = (event) => {
   const capitalized = capitalize(transcript);
 
   const userLastChar = transcript.slice(-1);
+  recognition.onstart = () => {
+  speakBtn.classList.add("listening");
+};
+
+recognition.onend = () => {
+  speakBtn.classList.remove("listening");
+};
+
+recognition.onerror = (e) => {
+  speakBtn.classList.remove("listening");
+  statusDiv.textContent = "🎤 Error: " + e.error;
+};
+
 
   isValidPlace(transcript, lastLetter).then(async (valid) => {
     if (!valid) {
@@ -350,6 +363,7 @@ if (used.includes(transcript)) {
     statusDiv.textContent = `🎤 ${yourTurnText}`;
     speak(yourTurnText,() => {
       // Auto-click the Speak button to start listening
+      speakBtn.classList.add("listening")
       speakBtn.click();
     });
 
