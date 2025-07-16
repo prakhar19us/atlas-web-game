@@ -310,22 +310,6 @@ recognition.onresult = (event) => {
   userText.textContent = capitalized;
 
   const userLastChar = transcript.slice(-1);
-  recognition.onstart = () => {
-  speakBtn.classList.add("listening");
-};
-
-recognition.onend = () => {
-   if (isListening) {
-    recognition.start();
-  }
-    speakBtn.classList.remove("listening");
-};
-
-recognition.onerror = (e) => {
-  speakBtn.classList.remove("listening");
-  statusDiv.textContent = "🎤 Error: " + e.error;
-};
-
 
   isValidPlace(transcript, lastLetter).then(async (valid) => {
     if (!valid) {
@@ -385,9 +369,25 @@ if (used.includes(transcript)) {
   });
 };
 
+// ✅ Set these once, not inside onresult
+recognition.onstart = () => {
+  isListening = true;
+  speakBtn.classList.add("listening");
+};
+
+recognition.onend = () => {
+  if (isListening) {
+    recognition.start(); // restart if still waiting
+  }
+  speakBtn.classList.remove("listening");
+};
+
 recognition.onerror = (e) => {
+  isListening = false;
+  speakBtn.classList.remove("listening");
   statusDiv.textContent = "🎤 Error: " + e.error;
 };
+
 
 speakBtn.addEventListener("click", () => {
   clearTimeout(listenTimeout);
