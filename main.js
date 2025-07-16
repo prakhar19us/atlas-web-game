@@ -131,6 +131,12 @@ const synth = window.speechSynthesis;
 
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = "en-IN";
+recognition.continuous = false;      // keep listening even after pauses
+recognition.interimResults = false; // we only care about final results
+
+let isListening = false;
+let listenTimeout;
+
 
 function getFlagImg(countryCode) {
   if (!countryCode) return '';
@@ -296,8 +302,12 @@ async function isValidPlace(place, expectedStart) {
 }
 
 recognition.onresult = (event) => {
-  const transcript = event.results[0][0].transcript.toLowerCase().trim();
+  clearTimeout(listenTimeout);
+  isListening = false;
+  speakBtn.classList.remove("listening");
+    const transcript = event.results[0][0].transcript.toLowerCase().trim();
   const capitalized = capitalize(transcript);
+  userText.textContent = capitalized;
 
   const userLastChar = transcript.slice(-1);
   recognition.onstart = () => {
@@ -305,7 +315,10 @@ recognition.onresult = (event) => {
 };
 
 recognition.onend = () => {
-  speakBtn.classList.remove("listening");
+   if (isListening) {
+    recognition.start();
+  }
+    speakBtn.classList.remove("listening");
 };
 
 recognition.onerror = (e) => {
@@ -377,11 +390,29 @@ recognition.onerror = (e) => {
 };
 
 speakBtn.addEventListener("click", () => {
+  // Clear any previous state
+  clearTimeout(listenTimeout);
+
+  // Indicate listening mode
+  isListening = true;
+  speakBtn.classList.add("listening");
   statusDiv.textContent = lastLetter
     ? `🎤 Your turn! Say a place starting with ${lastLetter.toUpperCase()}`
     : "🎤 Say a place to start!";
+
   recognition.start();
+
+  // Custom timeout (30 seconds)
+  listenTimeout = setTimeout(() => {
+    if (isListening) {
+      recognition.stop();
+      isListening = false;
+      speakBtn.classList.remove("listening");
+      statusDiv.textContent = "⏳ Listening timed out. Tap the mic to try again!";
+    }
+  }, 30000); // 30 seconds
 });
+
 
 function resetGame() {
   used = [];
