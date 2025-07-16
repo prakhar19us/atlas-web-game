@@ -376,7 +376,7 @@ if (used.includes(transcript)) {
     statusDiv.textContent = `🎤 ${yourTurnText}`;
     speak(yourTurnText,() => {
       // Auto-click the Speak button to start listening
-      speakBtn.classList.add("listening")
+      //speakBtn.classList.add("listening")
       speakBtn.click();
     });
 
@@ -390,19 +390,17 @@ recognition.onerror = (e) => {
 };
 
 speakBtn.addEventListener("click", () => {
-  // Clear any previous state
   clearTimeout(listenTimeout);
-
-  // Indicate listening mode
   isListening = true;
   speakBtn.classList.add("listening");
+
   statusDiv.textContent = lastLetter
     ? `🎤 Your turn! Say a place starting with ${lastLetter.toUpperCase()}`
     : "🎤 Say a place to start!";
 
   recognition.start();
 
-  // Custom timeout (30 seconds)
+  // custom timeout 30 seconds
   listenTimeout = setTimeout(() => {
     if (isListening) {
       recognition.stop();
@@ -410,8 +408,9 @@ speakBtn.addEventListener("click", () => {
       speakBtn.classList.remove("listening");
       statusDiv.textContent = "⏳ Listening timed out. Tap the mic to try again!";
     }
-  }, 30000); // 30 seconds
+  }, 30000);
 });
+
 
 
 function resetGame() {
