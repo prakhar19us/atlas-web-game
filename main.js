@@ -39,7 +39,7 @@ const places = [
   "odisha", "punjab", "rajasthan", "sikkim", "tamil nadu", "telangana",
   "tripura", "uttar pradesh", "uttarakhand", "west bengal",
   "andaman and nicobar islands", "chandigarh",
-  "dadra and nagar haveli and daman and diu", "delhi", "jammu and kashmir",
+  "dadar and nagar haveli", "daman and diu", "delhi", "jammu and kashmir",
   "ladakh", "lakshadweep", "puducherry",
   "kabul", "tirana", "algiers", "andorra la vella", "luanda", "saint john's",
   "buenos aires", "yerevan", "canberra", "vienna", "baku", "nassau", "manama",
@@ -109,6 +109,8 @@ const places = [
   "usedom", "sylt", "helgoland", "borkum", "norderney", "langeoog"
 ]
 ;
+// Before game starts
+places = places.map(p => p.toLowerCase().trim());
 
 let used = [];
 let lastLetter = null;
@@ -337,14 +339,13 @@ recognition.onresult = (event) => {
   return;
 }
 
-if (used.includes(transcript)) {
+const normalizedTranscript = transcript.toLowerCase().trim();
+if (used.includes(normalizedTranscript)) {
   statusDiv.textContent = "⚠️ This place has already been mentioned. Try a new one!";
   speak("This place has already been mentioned. Try a new one!");
   return;
 }
-
-
-    used.push(transcript);
+used.push(normalizedTranscript);
     const userCountryCode = await showOnMap(transcript);
     userText.innerHTML = getFlagImg(userCountryCode) + capitalized;
 
