@@ -1,4 +1,4 @@
-const places = [
+let places = [
   "afghanistan", "albania", "algeria", "andorra", "angola", "antigua and barbuda",
   "argentina", "armenia", "australia", "austria", "azerbaijan", "bahamas",
   "bahrain", "bangladesh", "barbados", "belarus", "belgium", "belize", "benin",
